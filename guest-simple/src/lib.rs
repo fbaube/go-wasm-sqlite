@@ -1,4 +1,7 @@
-wit_bindgen::generate!("app");
+wit_bindgen::generate!({
+    path: "../wit",
+    world: "app",
+});
 
 use crate::demo::db::database;
 

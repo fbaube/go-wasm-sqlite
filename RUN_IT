@@ -1,0 +1,2 @@
+GUEST_COMPONENT="$PWD/target/wasm32-wasip2/release/guest_simple.wasm" \
+cargo run -p wasi_sql_demo_host

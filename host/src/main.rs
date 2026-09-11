@@ -15,7 +15,7 @@ use crate::demo::db::database;
 
 wasmtime::component::bindgen!({
     world: "app",
-    path: "wit",
+    path: "../wit",
 });
 
 struct HostState {
