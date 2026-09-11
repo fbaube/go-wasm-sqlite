@@ -98,8 +98,12 @@ fn main() -> anyhow::Result<()> {
     let engine = Engine::new(&config)
         .map_err(|e| anyhow::anyhow!("failed to create Wasmtime engine: {e}"))?;
 
-    let component_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../target/wasm32-wasip2/release/guest_simple.wasm");
+    let component_path = std::env::var_os("GUEST_COMPONENT")
+    .map(PathBuf::from)
+    .unwrap_or_else(|| {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("../target/wasm32-wasip2/release/guest_simple.wasm")
+    });
 
     println!(
         "loading guest component: {}",

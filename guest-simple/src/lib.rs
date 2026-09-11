@@ -16,7 +16,7 @@ impl Guest for Application {
         }
 
         match database::execute(
-            "insert into people (id, name) values (1, 'Ada')",
+        "insert or ignore into people (id, name) values (1, 'Ada')",
         ) {
             Ok(_) => {}
             Err(error) => return format!("insert failed: {error}"),
