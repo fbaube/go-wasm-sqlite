@@ -1,0 +1,9 @@
+package demo:smoke;
+
+interface application {
+    run: func() -> string;
+}
+
+world app {
+    export application;
+}

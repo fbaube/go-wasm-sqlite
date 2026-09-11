@@ -1,0 +1,9 @@
+Date: Fri Sep 11 14:24:31 EEST 2026
+rustc 1.96.0 (ac68faa20 2026-05-25)
+cargo 1.96.0 (30a34c682 2026-05-25)
+wasmtime 48.0.1 (7bac2c277 2026-08-24)
+├── wasmtime v48.0.1
+└── wasmtime-wasi v48.0.1
+    ├── wasmtime v48.0.1 (*)
+    │   └── wasmtime v48.0.1 (*)
+        ├── wasmtime v48.0.1 (*)
