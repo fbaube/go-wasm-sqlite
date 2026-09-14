@@ -1,0 +1,24 @@
+package main
+
+import (
+"fmt"
+
+"wit_component/gen/demo/db/application"
+"wit_component/gen/demo/db/database"
+)
+
+func init() {
+application.Exports.Run = func() string {
+result := database.Execute(
+"create table if not exists people (id integer primary key, name text)",
+)
+
+if result.IsErr() {
+return fmt.Sprintf("create table failed: %s", *result.Err())
+}
+
+return fmt.Sprintf("table created; result=%d", *result.OK())
+}
+}
+
+func main() {}
