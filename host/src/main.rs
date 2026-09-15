@@ -4,12 +4,7 @@ use wasmtime::{
     component::{Component, Linker, ResourceTable},
     Config, Engine, Store,
 };
-use wasmtime_wasi::{
-    WasiCtx,
-    WasiCtxBuilder,
-    WasiCtxView,
-    WasiView,
-};
+use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiCtxView, WasiView};
 
 use crate::demo::db::database;
 
@@ -45,13 +40,8 @@ impl database::Host for HostState {
             .map_err(|e| e.to_string())
     }
 
-    fn query(
-        &mut self,
-        sql: String,
-    ) -> Result<database::QueryResult, String> {
-        let mut statement = self.database
-            .prepare(&sql)
-            .map_err(|e| e.to_string())?;
+    fn query(&mut self, sql: String) -> Result<database::QueryResult, String> {
+        let mut statement = self.database.prepare(&sql).map_err(|e| e.to_string())?;
 
         let columns = statement
             .column_names()
@@ -66,8 +56,7 @@ impl database::Host for HostState {
                 let mut values = Vec::with_capacity(column_count);
 
                 for index in 0..column_count {
-                    let value: rusqlite::types::Value = row
-                        .get(index)?;
+                    let value: rusqlite::types::Value = row.get(index)?;
 
                     let text = match value {
                         rusqlite::types::Value::Null => "NULL".to_string(),
@@ -99,16 +88,13 @@ fn main() -> anyhow::Result<()> {
         .map_err(|e| anyhow::anyhow!("failed to create Wasmtime engine: {e}"))?;
 
     let component_path = std::env::var_os("GUEST_COMPONENT")
-    .map(PathBuf::from)
-    .unwrap_or_else(|| {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../target/wasm32-wasip2/release/guest_simple.wasm")
-    });
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("../target/wasm32-wasip2/release/guest_simple.wasm")
+        });
 
-    println!(
-        "loading guest component: {}",
-        component_path.display()
-    );
+    println!("loading guest component: {}", component_path.display());
 
     let component = Component::from_file(&engine, &component_path)
         .map_err(|e| anyhow::anyhow!("failed to load guest component: {e}"))?;
@@ -121,10 +107,7 @@ fn main() -> anyhow::Result<()> {
     let database = rusqlite::Connection::open("demo.sqlite")
         .map_err(|e| anyhow::anyhow!("failed to open SQLite database: {e}"))?;
 
-    let wasi = WasiCtxBuilder::new()
-        .inherit_stdio()
-        .inherit_env()
-        .build();
+    let wasi = WasiCtxBuilder::new().inherit_stdio().inherit_env().build();
 
     let mut store = Store::new(
         &engine,
@@ -135,12 +118,8 @@ fn main() -> anyhow::Result<()> {
         },
     );
 
-Host_::add_to_linker::<HostState, HostState>(
-    &mut linker,
-    |state: &mut HostState| state,
-)
-.map_err(|e| anyhow::anyhow!("failed to add database interface: {e}"))?;
-
+    Host_::add_to_linker::<HostState, HostState>(&mut linker, |state: &mut HostState| state)
+        .map_err(|e| anyhow::anyhow!("failed to add database interface: {e}"))?;
 
     let bindings = Host_::instantiate(&mut store, &component, &linker)
         .map_err(|e| anyhow::anyhow!("failed to instantiate guest: {e}"))?;
