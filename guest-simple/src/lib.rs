@@ -12,7 +12,7 @@ struct Application;
 impl Guest for Application {
     fn run() -> String {
         match database::execute(
-"create table if not exists people (
+            "create table if not exists people (
     id integer primary key,
     name text
 )",
@@ -21,9 +21,7 @@ impl Guest for Application {
             Err(error) => return format!("create table failed: {error}"),
         }
 
-        match database::execute(
-        "insert or ignore into people (id, name) values (1, 'Ada')",
-        ) {
+        match database::execute("insert or ignore into people (id, name) values (1, 'Ada')") {
             Ok(_) => {}
             Err(error) => return format!("insert failed: {error}"),
         }
