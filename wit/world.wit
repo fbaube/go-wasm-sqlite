@@ -1,13 +1,5 @@
 package demo:db;
 
-// The Rust host and client components already use
-// this interface successfully. The Go component
-// will use it without importing wasm-sql directly.
-// Try TinyGo’s built-in WIT support, not the old
-// standalone wit-bindgen go command. TinyGo sup-
-// ports WASI Preview 2 components directly with
-// -target wasip2, -wit-package, and -wit-world 
-
 interface database {
     record query-result {
         columns: list<string>,
@@ -23,6 +15,13 @@ interface application {
 }
 
 world app {
+    include wasi:cli/imports@0.2.0;
     import database;
     export application;
 }
+
+world host {
+    import database;
+    export application;
+}
+

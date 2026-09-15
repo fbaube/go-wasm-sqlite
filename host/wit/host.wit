@@ -1,0 +1,6 @@
+package demo:host;
+
+world host {
+    import demo:db/database;
+    export demo:db/application;
+}

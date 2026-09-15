@@ -14,7 +14,7 @@ use wasmtime_wasi::{
 use crate::demo::db::database;
 
 wasmtime::component::bindgen!({
-    world: "app",
+    world: "host",
     path: "../wit",
 });
 
@@ -135,14 +135,14 @@ fn main() -> anyhow::Result<()> {
         },
     );
 
-App::add_to_linker::<HostState, HostState>(
+Host_::add_to_linker::<HostState, HostState>(
     &mut linker,
     |state: &mut HostState| state,
 )
 .map_err(|e| anyhow::anyhow!("failed to add database interface: {e}"))?;
 
 
-    let bindings = App::instantiate(&mut store, &component, &linker)
+    let bindings = Host_::instantiate(&mut store, &component, &linker)
         .map_err(|e| anyhow::anyhow!("failed to instantiate guest: {e}"))?;
 
     let result = bindings
