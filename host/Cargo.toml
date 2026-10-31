@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1"
 tokio = { version = "1", features = ["full"] }
-wasmtime = { version = "48", features = ["component-model", "async"] }
+wasmtime = { version = "50", features = ["component-model", "async"] }
 wasmtime-wasi = "48"
 rusqlite = { version = "0.32", features = ["bundled"] }
 tracing = "0.1"
